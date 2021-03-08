@@ -113,9 +113,7 @@ bool q_insert_head(queue_t *q, char *s)
  */
 bool q_insert_tail(queue_t *q, char *s)
 {
-    /* TODO: You need to write the complete code for this function */
     /* Remember: It should operate in O(1) time */
-    /* TODO: Remove the above comment when you are about to implement. */
     if (!q_insert_head(q, s))
         return false;
 
@@ -136,8 +134,6 @@ bool q_insert_tail(queue_t *q, char *s)
  */
 bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
 {
-    /* TODO: You need to fix up this code. */
-    /* TODO: Remove the above comment when you are about to implement. */
     if (!q_size(q))
         return false;
 
@@ -161,9 +157,7 @@ bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
  */
 int q_size(queue_t *q)
 {
-    /* TODO: You need to write the code for this function */
     /* Remember: It should operate in O(1) time */
-    /* TODO: Remove the above comment when you are about to implement. */
     return q ? q->size : 0;
 }
 
@@ -176,8 +170,6 @@ int q_size(queue_t *q)
  */
 void q_reverse(queue_t *q)
 {
-    /* TODO: You need to write the code for this function */
-    /* TODO: Remove the above comment when you are about to implement. */
     list_ele_t *node, *next, *prev;
     if (!q)
         return;
@@ -234,8 +226,6 @@ static void merge_sort(list_ele_t *beg, list_ele_t *end)
  */
 void q_sort(queue_t *q)
 {
-    /* TODO: You need to write the code for this function */
-    /* TODO: Remove the above comment when you are about to implement. */
     if (q_size(q))
         merge_sort(q->head, q->head);
 }
