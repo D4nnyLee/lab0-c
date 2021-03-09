@@ -215,7 +215,7 @@ static bool do_insert_head(int argc, char *argv[])
             bool rval = q_insert_head(q, inserts);
             if (rval) {
                 qcnt++;
-                if (!q->head->value) {
+                if (!q->head->next->value) {
                     report(1, "ERROR: Failed to save copy of string in list");
                     ok = false;
                 } else if (r == 0 && inserts == q->head->value) {
@@ -224,14 +224,14 @@ static bool do_insert_head(int argc, char *argv[])
                            "list element");
                     ok = false;
                     break;
-                } else if (r == 1 && lasts == q->head->value) {
+                } else if (r == 1 && lasts == q->head->next->value) {
                     report(1,
                            "ERROR: Need to allocate separate string for each "
                            "list element");
                     ok = false;
                     break;
                 }
-                lasts = q->head->value;
+                lasts = q->head->next->value;
             } else {
                 fail_count++;
                 if (fail_count < fail_limit)
@@ -300,7 +300,7 @@ static bool do_insert_tail(int argc, char *argv[])
             bool rval = q_insert_tail(q, inserts);
             if (rval) {
                 qcnt++;
-                if (!q->head->value) {
+                if (!q->head->next->value) {
                     report(1, "ERROR: Failed to save copy of string in list");
                     ok = false;
                 }
@@ -358,7 +358,7 @@ static bool do_remove_head(int argc, char *argv[])
 
     if (!q)
         report(3, "Warning: Calling remove head on null queue");
-    else if (!q->head)
+    else if (q->head->next == q->head)
         report(3, "Warning: Calling remove head on empty queue");
     error_check();
 
@@ -424,7 +424,7 @@ static bool do_remove_head_quiet(int argc, char *argv[])
     bool ok = true;
     if (!q)
         report(3, "Warning: Calling remove head on null queue");
-    else if (!q->head)
+    else if (q->head->next == q->head)
         report(3, "Warning: Calling remove head on empty queue");
     error_check();
 
@@ -558,7 +558,8 @@ bool do_sort(int argc, char *argv[])
 
     bool ok = true;
     if (q) {
-        for (list_ele_t *e = q->head; e && --cnt; e = e->next) {
+        for (list_ele_t *e = q->head->next; e != q->head && --cnt;
+             e = e->next) {
             /* Ensure each element in ascending order */
             /* FIXME: add an option to specify sorting order */
             if (strcasecmp(e->value, e->next->value) > 0) {
@@ -586,9 +587,9 @@ static bool show_queue(int vlevel)
     }
 
     report_noreturn(vlevel, "q = [");
-    list_ele_t *e = q->head;
+    list_ele_t *e = q->head->next;
     if (exception_setup(true)) {
-        while (ok && e && cnt < qcnt) {
+        while (ok && e != q->head && cnt < qcnt) {
             if (cnt < big_queue_size)
                 report_noreturn(vlevel, cnt == 0 ? "%s" : " %s", e->value);
             e = e->next;
@@ -603,7 +604,7 @@ static bool show_queue(int vlevel)
         return false;
     }
 
-    if (!e) {
+    if (e == q->head) {
         if (cnt <= big_queue_size)
             report(vlevel, "]");
         else
